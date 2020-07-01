@@ -1,5 +1,25 @@
 module.exports = {
   plugins: [
+    `gatsby-plugin-sitemap`,
+    {
+      resolve: `gatsby-plugin-google-analytics`,
+      options: {
+        // replace "UA-XXXXXXXXX-X" with your own Tracking ID
+        trackingId: "UA-171371797-1",
+      },
+    },
+    {
+      resolve: `gatsby-plugin-gdpr-cookies`,
+      options: {
+        googleAnalytics: {
+          trackingId: "UA-171371797-1",
+          // Setting this parameter is optional
+          anonymize: true,
+        },
+        environments: ["production", "development"],
+      },
+    },
+
     {
       resolve: `gatsby-theme-blog`,
       options: {},
@@ -7,9 +27,10 @@ module.exports = {
   ],
   // Customize your site metadata:
   siteMetadata: {
-    title: `My Blog Title`,
-    author: `My Name`,
-    description: `My site description...`,
+    title: `David Sanwald | Blog`,
+    siteUrl: `https://www.davidsanwald.net`,
+    author: `David Sanwald`,
+    description: `All things code.`,
     social: [
       {
         name: `twitter`,
