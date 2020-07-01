@@ -9,6 +9,18 @@ module.exports = {
       },
     },
     {
+      resolve: `gatsby-plugin-manifest`,
+      options: {
+        name: `David Sanwald | Blog`,
+        short_name: `David Blog`,
+        start_url: `/`,
+        background_color: `#f7f0eb`,
+        theme_color: `#a2466c`,
+        display: `standalone`,
+        icon: `src/images/icon.png`,
+      },
+    },
+    {
       resolve: `gatsby-plugin-gdpr-cookies`,
       options: {
         googleAnalytics: {
