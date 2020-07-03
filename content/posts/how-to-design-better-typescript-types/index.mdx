@@ -1,0 +1,104 @@
+---
+title: How to Design Better Types in Typescript by Following One Simple Principle
+date: 2020-07-03
+excerpt: Better Types to Reduce Complexity
+---
+
+All maintainable, long-lived React codebases that are a joy to work with, even after years, share one thing:
+They consist of components that are built around data, that has the right structure.
+One of my favorite text about React of all time explains this perfectly:
+
+But even the official React docs emphasize the importance of choosing the right structure for your application data and building your components around that data.
+
+Fortunately, there are simple principles that make modeling your application data very easy.
+
+This article starts with the most important one:
+The space our models cover should only include cases that are valid in our domain
+
+## A Simple Example: Building Cars
+
+While the following example might not be very realistic for the average Typescript codebase, it's types are examples of two basic structures that are part of every codebase.
+
+### First Try Modeling Car Configurations
+
+To build cars we might come up with the following types:
+
+```typescript
+type PowerSource = "gas tank" | "battery"
+type Engine = "electric motor" | "petrol engine" | "diesel engine"
+type Fuel = "petrol" | "diesel" | "electrons"
+
+type Car = {
+  engine: Engine
+  fuel: Fuel
+  powerSource: PowerSource
+}
+```
+
+Let's look at the Car type. There are three kinds of engines, three kinds of fuel and two different types of power sources.
+Taking the _product_
+**2 x 3 x 3**
+we get **18** the number of all possible car configurations. At first, everything looks all nice and dandy. We are happy that Typescript prevents us from assigning random strings to our car parts, and we successfully prevent typos.
+
+The following example shows a valid car.
+
+```typescript
+const buggyCar: Car = {
+  engine: "petrol engine",
+  fuel: "diesel",
+  powerSource: "gas tank",
+}
+```
+
+but filling the tank and starting the engine leads to a nasty surprise:
+Powering the petrol engine with diesel would be its certain death. Yet the combination is a valid type.
+How could we design our types to prevent failures like this right away?
+
+### Designing Better Types for Our Car
+
+We start by analyzing the domain, and right away, we see that there are only three configurations that would result in functional cars.
+
+```typescript
+type ElectricCar = {
+  engine: "electric motor"
+  fuel: "electrons"
+  powerSource: "battery"
+}
+type DieselCar = {
+  engine: "diesel motor"
+  fuel: "diesel"
+  powerSource: "gas tank"
+}
+
+type PetrolCar = {
+  engine: "petrol motor"
+  fuel: "petrol"
+  powerSource: "gas tank"
+}
+```
+
+Now we can model the car type as one union of those interfaces:
+
+```typescript
+type Car = PetrolCar | ElectricCar | DieselCar
+```
+
+The new type only includes our three functional cars because we get the number of cases by building the _sum_ **1+1+1=3** instead of the _product_ **2x3x3=18** of our previous types.
+If we used the old types, we would need to use a combination of testing and documentation to prevent dysfunctional car configurations.
+
+### Why bother?
+
+Typescript is helpful. Even the first types would have prevented bugs by catching small mistakes like typos. But typing our code can also communicate intent or knowledge to other developers. Maybe it could bring us closer to communities of other languages like Elm, Clojure or Haskell. We could benefit a lot.
+
+### What's next?
+
+The following links are a good start for digging deeper:
+
+-[WHAT DO PRODUCT AND SUM TYPES HAVE TO DO WITH DATA MODELING?](https://lispcast.com/what-do-product-and-sum-types-have-to-do-with-data-modeling/)
+
+-["Making Impossible States Impossible" by Richard Feldman](https://youtu.be/IcgmSRJHu_8)
+
+### What do you think?
+
+Tell me if Typescript changed the way you think about code? When we remove the types, does your Typescript code still look different from your JavaScript code?
+Do you think Typescript brings us closer to learn from other communities?
